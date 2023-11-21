@@ -37,14 +37,14 @@ class HBNBCommand(cmd.Cmd):
         return True
 
 
-    def do_create(self, args):
+    def do_create(self, line):
         """ Creates an object with given parameters
         Usage: create <Class> <key 1>=<value 1> <key 2>=<value 2>...
         """
         try:
-            if not args:
+            if not line:
                 raise SyntaxError()
-            my_list = args.split(" ")
+            my_list = line.split(" ")
 
 
             kwargs = {}
@@ -74,12 +74,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist**")
 
 
-    def help_create(self):
-        """ Help information for the create method """
-        print("Creates a class of any type")
-        print("[Usage]: create <className>\n")
-
-    def do_show(self, args):
+    def do_show(self, line):
         """Prints the string representation of an instance
         Exceptions:
             SyntaxError: when there is no args given
@@ -88,7 +83,7 @@ class HBNBCommand(cmd.Cmd):
             KeyError: when there is no valid id given
         """
         try:
-            if not args:
+            if not line:
                 raise SyntaxError()
             my_list = line.split(" ")
             if my_list[0] not in self.__classes:
@@ -110,12 +105,8 @@ class HBNBCommand(cmd.Cmd):
         except KeyError:
             print("** no instance found **")
 
-    def help_show(self):
-        """ Help information for the show command """
-        print("Shows an individual instance of a class")
-        print("[Usage]: show <className> <objectId>\n")
 
-    def do_destroy(self, args):
+    def do_destroy(self, line):
         """Deletes an instance based on the class name and id
         Exceptions:
             SyntaxError: when there is no args given
@@ -124,7 +115,7 @@ class HBNBCommand(cmd.Cmd):
             KeyError: when there is no valid id given
         """
         try:
-            if not args:
+            if not line:
                 raise SyntaxError()
             my_list = line.split(" ")
             if my_list[0] not in self.__classes:
@@ -147,16 +138,12 @@ class HBNBCommand(cmd.Cmd):
         except KeyError:
             print("** no instance found **")
 
-    def help_destroy(self):
-        """ Help information for the destroy command """
-        print("Destroys an individual instance of a class")
-        print("[Usage]: destroy <className> <objectId>\n")
 
-    def do_all(self, args):
+    def do_all(self, line):
         """Usage: all or all <class> or <class>.all()
         Display string representations of all instances of a given class.
         If no class is specified, displays all instantiated objects."""
-        if not args:
+        if not line:
             o = storage.all()
             print([o[k].__str__() for k in o])
             return
@@ -169,16 +156,11 @@ class HBNBCommand(cmd.Cmd):
             o = storage.all(eval(args[0]))
             print([o[k].__str__() for k in o])
 
-
         except NameError:
             print("** class doesn't exist **")
 
-    def help_all(self):
-        """ Help information for the all command """
-        print("Shows all objects, or all of a class")
-        print("[Usage]: all <className>\n")
 
-    def do_count(self, args):
+    def do_count(self, line):
         """Count current number of class instances"""
         count = 0
         for k, v in storage._FileStorage__objects.items():
@@ -186,11 +168,8 @@ class HBNBCommand(cmd.Cmd):
                 count += 1
         print(count)
 
-    def help_count(self):
-        """ """
-        print("Usage: count <class_name>")
 
-    def do_update(self, args):
+    def do_update(self, line):
         """Updates an instanceby adding or updating attribute
         Exceptions:
             SyntaxError: when there is no args given
@@ -201,7 +180,7 @@ class HBNBCommand(cmd.Cmd):
             ValueError: when there is no value given
         """
         try:
-            if not args:
+            if not line:
                 raise SyntaxError()
             my_list = split(line, " ")
             if my_list[0] not in self.__classes:
@@ -235,11 +214,6 @@ class HBNBCommand(cmd.Cmd):
         except ValueError:
             print("** value missing **")
     
-
-    def help_update(self):
-        """ Help information for the update class """
-        print("Updates an object with new information")
-        print("Usage: update <className> <id> <attName> <attVal>\n")
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
