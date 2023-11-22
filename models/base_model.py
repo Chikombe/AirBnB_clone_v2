@@ -11,7 +11,7 @@ Base = declarative_base()
 
 
 class BaseModel:
-    """A base class that defines all attributes for hbnb models"""
+    """A base class for all hbnb models"""
 
     """
     Attributes:
@@ -29,8 +29,9 @@ class BaseModel:
         if not kwargs:
             from models import storage
             self.id = str(uuid.uuid4())
-            self.created_at = datetime.utcnow()
-            self.updated_at = datetime.utcnow()
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+
         else:
             kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
@@ -53,17 +54,17 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
+        dict_f = {}
+        dict_f.update(self.__dict__)
+        dict_f.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        return dictionary
+        dict_f['created_at'] = self.created_at.isoformat()
+        dict_f['updated_at'] = self.updated_at.isoformat()
+        return dict_f
 
     def delete(self):
         '''
-            Delete current instance from storage by calling
+            Delete current instancr from storage by calling
             the method 'delete'
         '''
         from models import storage
