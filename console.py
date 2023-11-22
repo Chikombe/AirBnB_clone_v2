@@ -143,7 +143,6 @@ class HBNBCommand(cmd.Cmd):
             if args[0] not in self.__classes:
                 raise NameError()
 
-
             o = storage.all(eval(args[0]))
             print([o[k].__str__() for k in o])
 
@@ -260,6 +259,7 @@ class HBNBCommand(cmd.Cmd):
                     self.do_update(args)
         else:
             cmd.Cmd.default(self, line)
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
