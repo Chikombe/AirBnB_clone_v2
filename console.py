@@ -14,28 +14,30 @@ from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
-    """The entry point for the command interpreter"""
-
+    """this class is entry point of the command interpreter
+    """
     prompt = "(hbnb) "
-    __classes = {"BaseModel", "State", "User", "City",
-                 "Place", "Amenity", "Review"}
+    __classes = {"BaseModel", "User", "City", "State", "Amenity", "Place",
+                 "Review"}
 
     def emptyline(self):
-        """Ignore empty spaces."""
+        """Ignores empty spaces"""
         pass
 
     def do_quit(self, line):
-        """Quit command to exit the program."""
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, line):
-        """EOF signal to exit the program."""
+        """Quit command to exit the program at end of file"""
         print("")
         return True
 
     def do_create(self, line):
-        """ Creates an object with given parameters
-        Usage: create <Class> <key 1>=<value 1> <key 2>=<value 2>...
+        """Creates a new instance of BaseModel, saves it
+        Exceptions:
+            SyntaxError: when there is no args given
+            NameError: when there is no object taht has the name
         """
         try:
             if not line:
@@ -55,12 +57,12 @@ class HBNBCommand(cmd.Cmd):
                 kwargs[key] = value
 
             if kwargs == {}:
-                obj = eval(my_list[0])()
+                new_obj = eval(my_list[0])()
             else:
-                obj = eval(my_list[0])(**kwargs)
-                storage.new(obj)
-            print(obj.id)
-            obj.save()
+                new_obj = eval(my_list[0])(**kwargs)
+                storage.new(new_obj)
+            print(new_obj.id)
+            new_obj.save()
 
         except SyntaxError:
             print("** class name missing **")
@@ -131,26 +133,30 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, line):
-        """Usage: all or all <class> or <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
+        """Prints all string representation of all instances
+        Exceptions:
+            NameError: when there is no object taht has the name
+        """
+        """objects = storage.all()
+        my_list = []"""
+
         if not line:
-            o = storage.all()
-            print([o[k].__str__() for k in o])
+            obj = storage.all()
+            print([obj[key].__str__() for key in obj])
             return
         try:
-            line = line.split(" ")
+            args = line.split(" ")
             if args[0] not in self.__classes:
                 raise NameError()
 
-            o = storage.all(eval(args[0]))
-            print([o[k].__str__() for k in o])
+            obj = storage.all(eval(args[0]))
+            print([obj[key].__str__() for key in obj])
 
         except NameError:
             print("** class doesn't exist **")
 
     def do_update(self, line):
-        """Updates an instance by adding or updating attribute
+        """Updates an instanceby adding or updating attribute
         Exceptions:
             SyntaxError: when there is no args given
             NameError: when there is no object taht has the name
@@ -218,8 +224,8 @@ class HBNBCommand(cmd.Cmd):
         Return:
             returns string of argumetns
         """
-        isi_list = []
-        isi_list.append(args[0])
+        new_list = []
+        new_list.append(args[0])
         try:
             my_dict = eval(
                 args[1][args[1].find('{'):args[1].find('}')+1])
@@ -227,12 +233,12 @@ class HBNBCommand(cmd.Cmd):
             my_dict = None
         if isinstance(my_dict, dict):
             new_str = args[1][args[1].find('(')+1:args[1].find(')')]
-            isi_list.append(((new_str.split(", "))[0]).strip('"'))
-            isi_list.append(my_dict)
-            return isi_list
+            new_list.append(((new_str.split(", "))[0]).strip('"'))
+            new_list.append(my_dict)
+            return new_list
         new_str = args[1][args[1].find('(')+1:args[1].find(')')]
-        isi_list.append(" ".join(new_str.split(", ")))
-        return " ".join(i for i in isi_list)
+        new_list.append(" ".join(new_str.split(", ")))
+        return " ".join(i for i in new_list)
 
     def default(self, line):
         """retrieve all instances of a class and

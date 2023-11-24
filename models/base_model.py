@@ -13,35 +13,13 @@ Base = declarative_base()
 class BaseModel:
     """A base class for all hbnb models"""
 
-    """
-    Attributes:
-        id (sqlalchemy String): BaseModel id
-        created_at (sqlalchemy DateTime): created at datetime
-        updated_at (sqlalchemy DateTime): updated at datetime
-    """
 
     id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-<<<<<<< HEAD
-        """Instatntiates a new model"""
-        if not kwargs:
-            from models import storage
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-
-        else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
-=======
-        """Instantiates a new model
+        """Instantiation of base model class
         Args:
             args: it won't be used
             kwargs: arguments for the constructor of the BaseModel
@@ -58,8 +36,6 @@ class BaseModel:
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
-        
->>>>>>> 4709c26c3e0ffb5f7a3d179b9366091bfc4c0970
 
     def __str__(self):
         """Returns a string representation of the instance"""
