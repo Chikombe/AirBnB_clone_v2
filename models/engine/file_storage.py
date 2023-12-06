@@ -11,9 +11,8 @@ from models.user import User
 
 
 class FileStorage:
+
     """Represent an abstracted storage engine.
-
-
     Attributes:
         __file_path (str): The name of the file to save objects to.
         __objects (dict): A dictionary of instantiated objects.
@@ -23,33 +22,31 @@ class FileStorage:
 
     def all(self, cls=None):
         """Return a dictionary of instantiated objects in __objects.
+        If a cls is specified, returns a dictionary of objects of that type.
+        Otherwise, returns the __objects dictionary.
         """
         if cls is not None:
             if type(cls) == str:
                 cls = eval(cls)
-            dict_cls = {}
-            for x, y in self.__objects.items():
-                if type(y) == cls:
-                    dict_cls[x] = y
-            return dict_cls
+            cls_dict = {}
+            for k, v in self.__objects.items():
+                if type(v) == cls:
+                    cls_dict[k] = v
+            return cls_dict
         return self.__objects
 
     def new(self, obj):
-        """Set in __objects obj with key <obj_class_name>.id.
-        """
+        """Set in __objects obj with key <obj_class_name>.id."""
         self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
     def save(self):
-        """Serialize __objects to the JSON file __file_path.
-        """
-        fp_odict = {o: self.__objects[o].to_dict()
-                    for o in self.__objects.keys()}
+        """Serialize __objects to the JSON file __file_path."""
+        odict = {o: self.__objects[o].to_dict() for o in self.__objects.keys()}
         with open(self.__file_path, "w", encoding="utf-8") as f:
-            json.dump(fp_odict, f)
+            json.dump(odict, f)
 
     def reload(self):
-        """Deserialize the JSON file __file_path to __objects, if it exists.
-        """
+        """Deserialize the JSON file __file_path to __objects, if it exists."""
         try:
             with open(self.__file_path, "r", encoding="utf-8") as f:
                 for o in json.load(f).values():
@@ -60,15 +57,12 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Delete a given object from __objects, if it exists.
-        """
+        """Delete a given object from __objects, if it exists."""
         try:
             del self.__objects["{}.{}".format(type(obj).__name__, obj.id)]
         except (AttributeError, KeyError):
             pass
 
     def close(self):
-        """call reload() method for deserializing the JSON file to objects"""
+        """Call the reload method."""
         self.reload()
-        
-

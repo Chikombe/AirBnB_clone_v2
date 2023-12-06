@@ -1,24 +1,34 @@
 #!/usr/bin/python3
-""" This is the Console Module for AirBnB"""
+"""This is the console for the AirBnB"""
 import cmd
 from shlex import split
+from models import storage
 from datetime import datetime
 from models.base_model import BaseModel
-from models import storage
 from models.user import User
-from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
+from models.place import Place
 from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
-    """The entry point for the command interpreter"""
+
+    """This class is entry point of the command interpreter"""
 
     prompt = "(hbnb) "
-    __classes = {"BaseModel", "State", "User", "City",
-                 "Place", "Amenity", "Review"}
+
+    __classes = {
+
+        "BaseModel",
+        "User",
+        "State",
+        "City",
+        "Amenity",
+        "Place",
+        "Review"
+    }
 
     def emptyline(self):
         """Ignore empty spaces."""
@@ -34,44 +44,66 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, line):
-        """ Creates an object with given parameters
-        Usage: create <Class> <key 1>=<value 1> <key 2>=<value 2>...
+
+        """Usage: create <class> <key 1>=<value 2> <key 2>=<value 2> ...
+        Create a new class instance with given keys/values and print its id.
         """
+
         try:
             if not line:
                 raise SyntaxError()
             my_list = line.split(" ")
 
             kwargs = {}
+
             for i in range(1, len(my_list)):
+
                 key, value = tuple(my_list[i].split("="))
+
                 if value[0] == '"':
                     value = value.strip('"').replace("_", " ")
+
                 else:
+
                     try:
+
                         value = eval(value)
+
                     except (SyntaxError, NameError):
+
                         continue
+
                 kwargs[key] = value
 
             if kwargs == {}:
+
                 obj = eval(my_list[0])()
+
             else:
+
                 obj = eval(my_list[0])(**kwargs)
+
                 storage.new(obj)
+
             print(obj.id)
+
             obj.save()
 
         except SyntaxError:
+
             print("** class name missing **")
+
         except NameError:
+
             print("** class doesn't exist **")
 
     def do_show(self, line):
+
         """Prints the string representation of an instance
+
         Exceptions:
             SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
+            NameError: when there is no object that has the name
             IndexError: when there is no id given
             KeyError: when there is no valid id given
         """
@@ -99,10 +131,11 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, line):
+
         """Deletes an instance based on the class name and id
         Exceptions:
             SyntaxError: when there is no args given
-            NameError: when there is no object taht has the name
+            NameError: when there is no object that has the name
             IndexError: when there is no id given
             KeyError: when there is no valid id given
         """
@@ -131,15 +164,17 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, line):
+
         """Usage: all or all <class> or <class>.all()
         Display string representations of all instances of a given class.
         If no class is specified, displays all instantiated objects."""
+
         if not line:
             o = storage.all()
             print([o[k].__str__() for k in o])
             return
         try:
-            line = line.split(" ")
+            args = line.split(" ")
             if args[0] not in self.__classes:
                 raise NameError()
 
@@ -150,7 +185,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, line):
-        """Updates an instance by adding or updating attribute
+
+        """Updates an instanceby adding or updating attribute
         Exceptions:
             SyntaxError: when there is no args given
             NameError: when there is no object taht has the name
@@ -218,8 +254,8 @@ class HBNBCommand(cmd.Cmd):
         Return:
             returns string of argumetns
         """
-        isi_list = []
-        isi_list.append(args[0])
+        new_list = []
+        new_list.append(args[0])
         try:
             my_dict = eval(
                 args[1][args[1].find('{'):args[1].find('}')+1])
@@ -227,12 +263,12 @@ class HBNBCommand(cmd.Cmd):
             my_dict = None
         if isinstance(my_dict, dict):
             new_str = args[1][args[1].find('(')+1:args[1].find(')')]
-            isi_list.append(((new_str.split(", "))[0]).strip('"'))
-            isi_list.append(my_dict)
-            return isi_list
+            new_list.append(((new_str.split(", "))[0]).strip('"'))
+            new_list.append(my_dict)
+            return new_list
         new_str = args[1][args[1].find('(')+1:args[1].find(')')]
-        isi_list.append(" ".join(new_str.split(", ")))
-        return " ".join(i for i in isi_list)
+        new_list.append(" ".join(new_str.split(", ")))
+        return " ".join(i for i in new_list)
 
     def default(self, line):
         """retrieve all instances of a class and
@@ -262,4 +298,5 @@ class HBNBCommand(cmd.Cmd):
 
 
 if __name__ == '__main__':
+
     HBNBCommand().cmdloop()
