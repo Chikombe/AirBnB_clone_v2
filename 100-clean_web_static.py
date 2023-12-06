@@ -8,7 +8,7 @@ from os.path import exists
 # do_pack = __import__('1-pack_web_static').do_pack
 # do_deploy = __import__('2-do_deploy_web_static').do_deploy
 
-env.hosts = ['54.165.88.198', '100.26.255.115']  # <IP web-01>, <IP web-02>
+env.hosts = ['54.174.201.254', '3.86.13.200']  # <IP web-01>, <IP web-02>
 
 def do_pack():
     """generates a .tgz archive from the contents of the web_static folder"""
