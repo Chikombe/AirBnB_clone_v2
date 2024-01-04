@@ -5,6 +5,7 @@ from models.state import State
 from flask import Flask, render_template
 app = Flask(__name__)
 
+
 @app.route('/cities_by_states')
 def states_list():
     """Render template with states"""
@@ -12,6 +13,7 @@ def states_list():
     states = storage.all(State)
     # sort State object alphabetically by name
      return render_template(path, states=states)
+
 
 @app.teardown_appcontext
 def app_teardown(arg=None):
